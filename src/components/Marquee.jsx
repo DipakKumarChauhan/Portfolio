@@ -1,3 +1,4 @@
+import React from "react";
 import gsap from "gsap";
 import { PiStarFourFill } from 'react-icons/pi';
 import { Observer } from "gsap/all";
@@ -167,4 +168,4 @@ const Marquee = ({
   );
 };
 
-export default Marquee;
+export default React.memo(Marquee);

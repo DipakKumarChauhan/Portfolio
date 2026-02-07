@@ -58,4 +58,4 @@ const AnimatedHeaderSection = ({subTitle,title,text,textColor, withScrollTrigger
   )
 }
 
-export default AnimatedHeaderSection
+export default React.memo(AnimatedHeaderSection)
