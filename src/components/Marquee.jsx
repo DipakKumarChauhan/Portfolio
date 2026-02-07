@@ -123,42 +123,61 @@ const Marquee = ({
 
   // Scroll Observer: user ke scroll direction ke hisaab se marquee ki speed/direction change hoti hai
   useEffect(() => {
-    const tl = horizontalLoop(itemsRef.current, {
-      repeat: -1,
-      paddingRight: 30,
-      reversed: reverse,
-    });
+    let tl;
+    let observer;
+    let isMounted = true;
 
-    // Direction + speed tweak on scroll
-    Observer.create({
-      onChangeY(self) {
-        let factor = 2.5;
-        if ((!reverse && self.deltaY < 0) || (reverse && self.deltaY > 0)) {
-          factor *= -1;
-        }
-        gsap
-          .timeline({
-            defaults: {
-              ease: "none",
-            },
-          })
-          .to(tl, { timeScale: factor * 2.5, duration: 0.2, overwrite: true })
-          .to(tl, { timeScale: factor / 2.5, duration: 1 }, "+=0.3");
-      },
-    });
-    return () => tl.kill();
+    const setup = async () => {
+      // Wait for fonts to load so widths/offsets are correct (prevents overlap)
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+      if (!isMounted) return;
+
+      tl = horizontalLoop(itemsRef.current, {
+        repeat: -1,
+        paddingRight: 30,
+        reversed: reverse,
+      });
+
+      // Direction + speed tweak on scroll
+      observer = Observer.create({
+        onChangeY(self) {
+          let factor = 2.5;
+          if ((!reverse && self.deltaY < 0) || (reverse && self.deltaY > 0)) {
+            factor *= -1;
+          }
+          gsap
+            .timeline({
+              defaults: {
+                ease: "none",
+              },
+            })
+            .to(tl, { timeScale: factor * 2.5, duration: 0.2, overwrite: true })
+            .to(tl, { timeScale: factor / 2.5, duration: 1 }, "+=0.3");
+        },
+      });
+    };
+
+    setup();
+
+    return () => {
+      isMounted = false;
+      if (observer) observer.kill();
+      if (tl) tl.kill();
+    };
   }, [items, reverse]);
   return (
     <div
       ref={containerRef}
       className={`overflow-hidden w-full h-20 md:h-[100px] flex items-center marquee-text-responsive font-light uppercase whitespace-nowrap ${className}`}
     >
-      <div className="flex">
+      <div className="flex flex-nowrap">
         {items.map((text, index) => (
           <span
             key={index}
             ref={(el) => (itemsRef.current[index] = el)}
-            className="flex items-center px-16 gap-x-32"
+            className="flex items-center px-16 gap-x-32 shrink-0 whitespace-nowrap"
           >
             {text} <Icon className={iconClassName} />
           </span>
