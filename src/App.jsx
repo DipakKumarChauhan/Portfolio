@@ -31,7 +31,7 @@ const SectionFallback = () => (
 const App = () => {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
-  const [fakeProgress, setFakeProgress] = useState(0)
+  const [fakeProgress, setFakeProgress] = useState(50) // Pehle hi user ko max progress dikha do taaki esa lage ki website jaldi load ho rahi hai
 
   // Jab loading 100% ho jaye, tab content dikhana start karte hain
   useEffect(() => {

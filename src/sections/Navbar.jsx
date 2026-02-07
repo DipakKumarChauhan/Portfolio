@@ -108,6 +108,7 @@ const Navbar = () => {
                 smooth 
                 offset = {0}
                 duration = {2000}
+                onClick = {toggleMenu}
                 >
                     {section}
                 </Link>

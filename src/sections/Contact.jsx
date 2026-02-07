@@ -8,15 +8,8 @@ const Contact = () => {
   // Section description text (CTA style)
   const text = `Got a question, how or project Idea?
     I'd love to hear from you and discus further!`;
-  // Marquee ke items: repeating text for footer strip
-  const items = [
-    "just imagin, I code",
-    "just imagin, I code",
-    "just imagin, I code",
-    "just imagin, I code",
-    "just imagin, I code",
-
-  ];
+  // Marquee ke items: repeating text for footer strip (optimized with Array.fill)
+  const items = Array(5).fill("just imagin, I code");
   // GSAP: social links ko scroll par slide-up + fade-in effect dena
   useGSAP(() => {
     gsap.from(".social-link", {
@@ -66,17 +59,27 @@ const Contact = () => {
               <h2>Social Media</h2>
               <div className="w-full h-px my-2 bg-white/30" />
               <div className="flex flex-wrap gap-2">
-                {socials.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    className="text-xs leading-loose tracking-wides uppercase md:text-sm hover:text-white/80 transition-colors duration-200"
-                  >
-                    {"{ "}
-                    {social.name}
-                    {" }"}
-                  </a>
-                ))}
+                {socials.map((social, index) => {
+                  const Icon = social.Icon;
+                  return (
+                    <a
+                      key={index}
+                      href={social.href}
+                      className="text-xs leading-loose tracking-wides uppercase md:text-sm hover:text-white/80 transition-colors duration-200 flex items-center gap-1"
+                    >
+                      {Icon ? (
+                        <Icon className="text-2xl" aria-hidden />
+                      ) : (
+                        <span>
+                          {"{"}
+                          {social.name}
+                          {"}"}
+                          </span>
+                      )}
+                      
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>
