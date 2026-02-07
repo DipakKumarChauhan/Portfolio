@@ -7,7 +7,7 @@ import gsap from "gsap";
 const Contact = () => {
   // Section description text (CTA style)
   const text = `Got a question, how or project Idea?
-    WE’D love to hear from you and discus further!`;
+    I'd love to hear from you and discus further!`;
   // Marquee ke items: repeating text for footer strip
   const items = [
     "just imagin, I code",
@@ -15,6 +15,7 @@ const Contact = () => {
     "just imagin, I code",
     "just imagin, I code",
     "just imagin, I code",
+
   ];
   // GSAP: social links ko scroll par slide-up + fade-in effect dena
   useGSAP(() => {

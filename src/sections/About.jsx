@@ -13,12 +13,13 @@ const About = () => {
   useGSAP(() => {
     // Section par subtle scale effect while scrolling
     gsap.to("#about", {
-      scale: 0.95,
+      scale: 0.98,
       scrollTrigger: {
         trigger: "#about",
-        start: "bottom 80%",
-        end: "bottom 20%",
+        start: "top bottom",
+        end: "top 20%",
         scrub: true,
+        duration:1,
         markers: false,
       },
       ease: "power1.inOut",
@@ -39,7 +40,7 @@ const About = () => {
     <section id="about" className="min-h-screen bg-black">
       {/* Heading + animated paragraph (white theme) */}
       <AnimatedHeaderSection
-        subTitle={"✨ Curious Mind, Creative Code, 🚀 Building Ideas Into Impact"}
+        subTitle={"A curious mind crafting creative code to turn ideas into impact"}
         title={"About"}
         text={text}
         textColor={"text-white"}

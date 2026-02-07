@@ -71,14 +71,17 @@ const Navbar = () => {
         let lastScrollY = window.scrollY;
         const handelScroll = () =>{
             const currentScrollY = window.scrollY;
-            setShowBurger(lastScrollY > currentScrollY || currentScrollY < 10);
+            // Don't hide burger if navbar is open
+            if(!isOpen){
+                setShowBurger(lastScrollY > currentScrollY || currentScrollY < 10);
+            }
             lastScrollY = currentScrollY;
         }
         window.addEventListener("scroll",handelScroll,{passive:true});
         return ()=>{
             window.removeEventListener("scroll",handelScroll);
         }
-    },[]);    
+    },[isOpen]);    
 
     // Toggle menu: open hoga toh play, close hoga toh reverse
     const toggleMenu = () =>{
@@ -132,20 +135,20 @@ const Navbar = () => {
 
     </div>
     </nav>
-    <div className='fixed z-50 flex flex-col items-center justify-center gap-1 transition-all duration-400 bg-black rounded-full cursor-pointer w-14 h-14 md:w-20 md:h-20 top-4 right-10'
+    <div className={`fixed z-50 flex flex-col items-center justify-center gap-1 transition-all duration-400 rounded-full cursor-pointer w-14 h-14 md:w-20 md:h-20 top-4 right-10 ${isOpen ? 'bg-black' : 'bg-white'}`}
         onClick={toggleMenu}
         style = {showBurger?
-        {clipPath: "circle(50.3% at 50% 50%)"}
-        : {clipPath: "circle(0% at 50% 50%)"}}>
+        {clipPath: "circle(50.3% at 50% 50%)", ...(isOpen ? {} : {mixBlendMode: "difference"})}
+        : {clipPath: "circle(0% at 50% 50%)", ...(isOpen ? {} : {mixBlendMode: "difference"})}}>
                 {/* Burger icon lines: GSAP se rotate/translate hote hain */}
                 <span
                 ref = {topLineRef}
-                 className='block w-8 h-0.5 bg-white rounded-full origin-venter'>
+                 className={`block w-8 h-0.5 rounded-full origin-venter ${isOpen ? 'bg-white' : 'bg-black'}`}>
                     
                 </span>
                 <span 
                     ref = {bottomLineRef}
-                    className='block w-8 h-0.5 bg-white rounded-full origin-venter'>
+                    className={`block w-8 h-0.5 rounded-full origin-venter ${isOpen ? 'bg-white' : 'bg-black'}`}>
                     
                 </span>
     </div>

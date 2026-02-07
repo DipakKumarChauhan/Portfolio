@@ -32,7 +32,7 @@ const Marquee = ({
       widths = [],
       xPercents = [],
       curIndex = 0,
-      pixelsPerSecond = (config.speed || 1) * 100,
+      pixelsPerSecond = (config.speed || 1) * 150,
       snap =
         config.snap === false ? (v) => v : gsap.utils.snap(config.snap || 1),
       totalWidth,
