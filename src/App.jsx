@@ -1,31 +1,46 @@
 import React from 'react'
 import Navbar from './sections/Navbar'
 import Hero from './sections/Hero'
-import ServiceSummary from './sections/ServiceSummary'
-import Services from './sections/Services'
-import About from './sections/About'
-import Works from './sections/Works'
-import ContactSummary from './sections/ContactSummary'
-import Contact from './sections/Contact'
 import { useState, useEffect } from 'react'
 import { useProgress } from "@react-three/drei";
 import { ReactLenis } from 'lenis/react'
+import { Suspense, lazy } from 'react'; // Implementing Lazy loading
+
 
 // Lenis smooth scrolling: page scroll ko buttery smooth banata hai
 // useProgress: 3D assets (GLTF) load hone ka progress deta hai
 
-////////////////////////////////// Main App.jsx File ///////////////////////////////////////
+// Lazy Loading
+const ServiceSummary = lazy(() => import('./sections/ServiceSummary'));
+const Services = lazy(() => import('./sections/Services'));
+const About = lazy(() => import('./sections/About'));
+const Works = lazy(() => import('./sections/Works'));
+const ContactSummary = lazy(() => import('./sections/ContactSummary'));
+const Contact = lazy(() => import('./sections/Contact'));
 
+// Loading fallback
+const SectionFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-black">
+    <p className="text-white/50">Loading section...</p>
+  </div>
+);
+
+
+////////////////////////////////// Main App.jsx File ///////////////////////////////////////
 
 const App = () => {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
+  const [fakeProgress, setFakeProgress] = useState(0)
 
   // Jab loading 100% ho jaye, tab content dikhana start karte hain
   useEffect(() => {
-    if (progress === 100) {
-      setIsReady(true);
-    }
+    if (progress < 100) {
+    setFakeProgress(p => Math.min(p + 0.5, 95));
+  } else {
+    setFakeProgress(100);
+    setIsReady(true);
+  }
   }, [progress]);
   return (
     
@@ -35,12 +50,12 @@ const App = () => {
       {!isReady && (
         <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700 font-light">
           <p className="mb-4 text-xl tracking-widest animate-pulse">
-            Loading {Math.floor(progress)}%
+            Loading {Math.floor(fakeProgress)}%
           </p>
           <div className="relative h-1 overflow-hidden rounded w-60 bg-white/20">
             <div
               className="absolute top-0 left-0 h-full transition-all duration-300 bg-white"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${fakeProgress}%` }}
             ></div>
           </div>
         </div>
@@ -53,12 +68,30 @@ const App = () => {
       {/* Neeche saari page sections render ho rahi hain */}
       <Navbar/>
       <Hero/>
-      <ServiceSummary/>  
-      <Services/> 
-      <About/>
-      <Works/>
-      <ContactSummary/>
-      <Contact/>
+      {/* Lazy load heavy sections */}
+      <Suspense fallback={<SectionFallback />}>
+        <ServiceSummary/>  
+      </Suspense>
+      
+      <Suspense fallback={<SectionFallback />}>
+        <Services/> 
+      </Suspense>
+      
+      <Suspense fallback={<SectionFallback />}>
+        <About/>
+      </Suspense>
+      
+      <Suspense fallback={<SectionFallback />}>
+        <Works/>
+      </Suspense>
+      
+      <Suspense fallback={<SectionFallback />}>
+        <ContactSummary/>
+      </Suspense>
+      
+      <Suspense fallback={<SectionFallback />}>
+        <Contact/>
+      </Suspense>
       </div>
 
     </ReactLenis>
