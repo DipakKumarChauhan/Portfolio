@@ -5,6 +5,7 @@ import { useGSAP } from '@gsap/react';
 import React, { useRef } from 'react'
 import { Link } from 'react-scroll';
 import { FiArrowUpRight } from 'react-icons/fi';
+import SafeIcon from '../utils/SafeIcon';
 
 const Navbar = () => {
     const navRef =  useRef(null);
@@ -135,7 +136,6 @@ const Navbar = () => {
             <p className='tracking-wider text-white/50'>Social Media</p>
             <div className='flex flex-row flex-nowrap items-center gap-4 md:gap-8'>
                 {socials.map((social, index) => {
-                  const Icon = social.Icon;
                   return (
                     <a
                       key={index}
@@ -144,16 +144,14 @@ const Navbar = () => {
                       rel="noopener noreferrer"
                       className="text-xs leading-loose tracking-wides uppercase md:text-sm hover:text-white/80 transition-colors duration-200 flex items-center gap-1"
                     >
-                      {Icon ? (
-                        <Icon className="text-2xl" aria-hidden />
-                      ) : (
-                        <span>
-                          {"{"}
+                      <SafeIcon 
+                        Icon={social.Icon} 
+                        iconName={`navbar-social-${social.name}`}
+                        className="text-2xl"
+                        fallback={<span className="text-xs">{"{"}
                           {social.name}
-                          {"}"}
-                          </span>
-                      )}
-                      
+                          {"}"}</span>}
+                      />
                     </a>
                   );
                 })}

@@ -2,6 +2,7 @@ import { useGSAP } from "@gsap/react";
 import AnimatedHeaderSection from "../components/AnimatedHeaderSection";
 import Marquee from "../components/Marquee";
 import { socials } from "../constants";
+import SafeIcon from "../utils/SafeIcon";
 import gsap from "gsap";
 
 const Contact = () => {
@@ -61,7 +62,6 @@ const Contact = () => {
               <div className="w-full h-px my-2 bg-white/30" />
               <div className="flex flex-wrap gap-2">
                 {socials.map((social, index) => {
-                  const Icon = social.Icon;
                   return (
                     <a
                       key={index}
@@ -70,16 +70,14 @@ const Contact = () => {
                       rel="noopener noreferrer"
                       className="text-xs leading-loose tracking-wides uppercase md:text-sm hover:text-white/80 transition-colors duration-200 flex items-center gap-1"
                     >
-                      {Icon ? (
-                        <Icon className="text-2xl" aria-hidden />
-                      ) : (
-                        <span>
-                          {"{"}
+                      <SafeIcon 
+                        Icon={social.Icon} 
+                        iconName={`social-${social.name}`}
+                        className="text-2xl"
+                        fallback={<span className="text-xs">{"{"}
                           {social.name}
-                          {"}"}
-                          </span>
-                      )}
-                      
+                          {"}"}</span>}
+                      />
                     </a>
                   );
                 })}

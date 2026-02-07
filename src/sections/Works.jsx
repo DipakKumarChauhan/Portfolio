@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { FiArrowUpRight } from "react-icons/fi";
+import SafeIcon from "../utils/SafeIcon";
 
 const Works = () => {
   const overlayRefs = useRef([]);
@@ -146,7 +147,11 @@ const Works = () => {
     {project.name}
   </h2>
   <a href={project.href} target="_blank" rel="noopener noreferrer">
-    <FiArrowUpRight className="md:size-6 size-5" />
+    <SafeIcon 
+      Icon={FiArrowUpRight} 
+      iconName="works-arrow"
+      className="md:size-6 size-5"
+    />
   </a>
 </div>
 

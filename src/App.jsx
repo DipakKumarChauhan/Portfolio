@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useProgress } from "@react-three/drei";
 import { ReactLenis } from 'lenis/react'
 import { Suspense, lazy } from 'react'; // Implementing Lazy loading
+import ErrorBoundary from './utils/ErrorBoundary'
 
 
 // Lenis smooth scrolling: page scroll ko buttery smooth banata hai
@@ -66,32 +67,50 @@ const App = () => {
         } transition-opacity duration-1000`}
       >
       {/* Neeche saari page sections render ho rahi hain */}
-      <Navbar/>
-      <Hero/>
+      <ErrorBoundary componentName="Navbar">
+        <Navbar/>
+      </ErrorBoundary>
+      
+      <ErrorBoundary componentName="Hero">
+        <Hero/>
+      </ErrorBoundary>
+      
       {/* Lazy load heavy sections */}
-      <Suspense fallback={<SectionFallback />}>
-        <ServiceSummary/>  
-      </Suspense>
+      <ErrorBoundary componentName="ServiceSummary">
+        <Suspense fallback={<SectionFallback />}>
+          <ServiceSummary/>  
+        </Suspense>
+      </ErrorBoundary>
       
-      <Suspense fallback={<SectionFallback />}>
-        <Services/> 
-      </Suspense>
+      <ErrorBoundary componentName="Services">
+        <Suspense fallback={<SectionFallback />}>
+          <Services/> 
+        </Suspense>
+      </ErrorBoundary>
       
-      <Suspense fallback={<SectionFallback />}>
-        <About/>
-      </Suspense>
+      <ErrorBoundary componentName="About">
+        <Suspense fallback={<SectionFallback />}>
+          <About/>
+        </Suspense>
+      </ErrorBoundary>
       
-      <Suspense fallback={<SectionFallback />}>
-        <Works/>
-      </Suspense>
+      <ErrorBoundary componentName="Works">
+        <Suspense fallback={<SectionFallback />}>
+          <Works/>
+        </Suspense>
+      </ErrorBoundary>
       
-      <Suspense fallback={<SectionFallback />}>
-        <ContactSummary/>
-      </Suspense>
+      <ErrorBoundary componentName="ContactSummary">
+        <Suspense fallback={<SectionFallback />}>
+          <ContactSummary/>
+        </Suspense>
+      </ErrorBoundary>
       
-      <Suspense fallback={<SectionFallback />}>
-        <Contact/>
-      </Suspense>
+      <ErrorBoundary componentName="Contact">
+        <Suspense fallback={<SectionFallback />}>
+          <Contact/>
+        </Suspense>
+      </ErrorBoundary>
       </div>
 
     </ReactLenis>

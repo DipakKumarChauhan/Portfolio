@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { PiStarFourFill } from 'react-icons/pi';
 import { Observer } from "gsap/all";
+import SafeIcon from "../utils/SafeIcon";
 
 gsap.registerPlugin(Observer);
 const Marquee = ({
@@ -178,7 +179,7 @@ const Marquee = ({
             ref={(el) => (itemsRef.current[index] = el)}
             className="flex items-center px-16 gap-x-32 shrink-0 whitespace-nowrap"
           >
-            {text} <Icon className={iconClassName} />
+            {text} <SafeIcon Icon={Icon} iconName={`marquee-icon-${index}`} className={iconClassName} />
           </span>
         ))}
       </div>
