@@ -3,6 +3,7 @@ import Marquee from "../components/Marquee";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
+import { FiSquare } from "react-icons/fi";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,8 +49,8 @@ const ContactSummary = () => {
         items={items2}
         reverse={true}
         className="text-black bg-transparent border-y-2"
-        iconClassName="stroke-gold stroke-2 text-primary"
-        icon="material-symbols-light:square"
+        Icon={FiSquare}
+  iconClassName="text-[#C9A227]"
       />
     </section>
   );

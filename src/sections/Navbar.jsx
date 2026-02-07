@@ -118,7 +118,7 @@ const Navbar = () => {
     </div> 
     <div 
         ref = {contactRef}
-        className='flex flex-col flex-wrap justify-between gap-8 md:flex-row gap-x-2'
+        className='flex flex-row flex-nowrap items-start justify-between gap-6 md:gap-8'
     >
         <div className='font-light'>
             <p className='tracking-wider text-white/60'>Resume</p>
@@ -133,7 +133,7 @@ const Navbar = () => {
         </div>
         <div>
             <p className='tracking-wider text-white/50'>Social Media</p>
-            <div className='flex flex-col flex-wrap justify-between gap-8 md:flex-row gap-x-2'>
+            <div className='flex flex-row flex-nowrap items-center gap-4 md:gap-8'>
                 {socials.map((social, index) => {
                   const Icon = social.Icon;
                   return (

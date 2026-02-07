@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { PiStarFourFill } from 'react-icons/pi';
 import { Observer } from "gsap/all";
-import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(Observer);
 const Marquee = ({
