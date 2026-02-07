@@ -1,11 +1,10 @@
-import { Icon } from "@iconify/react";
-
 import React from "react";
 import AnimatedHeaderSection from "../components/AnimatedHeaderSection";
 import { projects } from "../constants";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { FiArrowUpRight } from "react-icons/fi";
 
 const Works = () => {
   const overlayRefs = useRef([]);
@@ -136,7 +135,7 @@ const Works = () => {
               <h2 className="lg:text-[32px] text-[26px] leading-none">
                 {project.name}
               </h2>
-              <Icon icon="lucide:arrow-up-right" className="md:size-6 size-5" />
+              <FiArrowUpRight className="md:size-6 size-5" />
             </div> */}
 
             {/* This is a Test Title  */}
@@ -147,7 +146,7 @@ const Works = () => {
     {project.name}
   </h2>
   <a href={project.href} target="_blank" rel="noopener noreferrer">
-    <Icon icon="lucide:arrow-up-right" className="md:size-6 size-5" />
+    <FiArrowUpRight className="md:size-6 size-5" />
   </a>
 </div>
 

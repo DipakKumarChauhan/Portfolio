@@ -1,5 +1,5 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import gsap from "gsap";
+import { PiStarFourFill } from 'react-icons/pi';
 import { Observer } from "gsap/all";
 import { useEffect, useRef } from "react";
 
@@ -7,7 +7,7 @@ gsap.registerPlugin(Observer);
 const Marquee = ({
   items,
   className = "text-white bg-black",
-  icon = "mdi:star-four-points",
+  Icon = PiStarFourFill,
   iconClassName = "",
   reverse = false,
 }) => {
@@ -159,7 +159,7 @@ const Marquee = ({
             ref={(el) => (itemsRef.current[index] = el)}
             className="flex items-center px-16 gap-x-32"
           >
-            {text} <Icon icon={icon} className={iconClassName} />
+            {text} <Icon className={iconClassName} />
           </span>
         ))}
       </div>

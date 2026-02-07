@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import React, { useRef } from 'react'
 import { Link } from 'react-scroll';
+import { FiArrowUpRight } from 'react-icons/fi';
 
 const Navbar = () => {
     const navRef =  useRef(null);
@@ -120,17 +121,42 @@ const Navbar = () => {
         className='flex flex-col flex-wrap justify-between gap-8 md:flex-row gap-x-2'
     >
         <div className='font-light'>
-            <p className='tracking-wider text-white/50'>E-mail</p>
-            <p className='text-xl tracking-widest lowercase text-pretty'>dipakofficialcse@gmail.com</p>
+            <p className='tracking-wider text-white/60'>Resume</p>
+            <a 
+                href="https://drive.google.com/file/d/1RnUyYxfq79-BXj49EhYKouRSgwoA90ir/view" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className='flex items-center gap-2 text-lg tracking-widest hover:text-white transition-colors duration-200'>
+                View 
+                <FiArrowUpRight className="size-4 md:size-5" />
+            </a>
         </div>
         <div>
             <p className='tracking-wider text-white/50'>Social Media</p>
             <div className='flex flex-col flex-wrap justify-between gap-8 md:flex-row gap-x-2'>
-                {socials.map((social,index)=>(
-                    <a key = {index}
-                        href = {social.href}    
-                    className='text-sm leading-loose trackin-widest uppercase hover:text-white transition-colors duration-colors'></a>
-                ))}
+                {socials.map((social, index) => {
+                  const Icon = social.Icon;
+                  return (
+                    <a
+                      key={index}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs leading-loose tracking-wides uppercase md:text-sm hover:text-white/80 transition-colors duration-200 flex items-center gap-1"
+                    >
+                      {Icon ? (
+                        <Icon className="text-2xl" aria-hidden />
+                      ) : (
+                        <span>
+                          {"{"}
+                          {social.name}
+                          {"}"}
+                          </span>
+                      )}
+                      
+                    </a>
+                  );
+                })}
             </div>
         </div>
 
