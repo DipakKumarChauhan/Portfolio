@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useGSAP } from "@gsap/react";
 import AnimatedHeaderSection from "../components/AnimatedHeaderSection";
 import Marquee from "../components/Marquee";
@@ -9,8 +10,9 @@ const Contact = () => {
   // Section description text (CTA style)
   const text = `Got a question, how or project Idea?
     I'd love to hear from you and discus further!`;
-  // Marquee ke items: repeating text for footer strip (optimized with Array.fill)
-  const items = Array(5).fill("just imagin, I code");
+  
+  // Memoize array to prevent recreation on every render (prevents marquee resets)
+  const items = useMemo(() => Array(5).fill("just imagin, I code"), []);
   // GSAP: social links ko scroll par slide-up + fade-in effect dena
   useGSAP(() => {
     gsap.from(".social-link", {

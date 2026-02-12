@@ -1,10 +1,31 @@
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
+import React, { useRef } from "react";
 import { PiStarFourFill } from 'react-icons/pi';
-import { Observer } from "gsap/all";
 import SafeIcon from "../utils/SafeIcon";
+import { useMarqueeAnimation } from "../hooks/useMarqueeAnimation";
 
-gsap.registerPlugin(Observer);
+/**
+ * Horizontal marquee component with scroll-reactive animation
+ * 
+ * Creates an infinite horizontal scrolling marquee that reacts to user scroll.
+ * The animation speeds up when scrolling and returns to normal when idle.
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {Array} props.items - Array of text items to display in marquee
+ * @param {string} [props.className="text-white bg-black"] - Additional CSS classes for styling
+ * @param {React.Component} [props.Icon=PiStarFourFill] - Icon component to display between items
+ * @param {string} [props.iconClassName=""] - CSS classes for icon styling
+ * @param {boolean} [props.reverse=false] - Reverse animation direction
+ * 
+ * @example
+ * <Marquee 
+ *   items={["Item 1", "Item 2", "Item 3"]} 
+ *   reverse={false}
+ *   className="text-black bg-white"
+ *   Icon={FiStar}
+ *   iconClassName="text-gold"
+ * />
+ */
 const Marquee = ({
   items,
   className = "text-white bg-black",
@@ -15,158 +36,8 @@ const Marquee = ({
   const containerRef = useRef(null);
   const itemsRef = useRef([]);
 
-  // Below Function GSAP forum se inspired: horizontally looping marquee create karta hai
-  // Source idea: https://greensock.com/forums/topic/27962-marquee-with-scroll-direction/
-  function horizontalLoop(items, config) {
-    items = gsap.utils.toArray(items);
-    config = config || {};
-    let tl = gsap.timeline({
-        repeat: config.repeat,
-        paused: config.paused,
-        defaults: { ease: "none" },
-        onReverseComplete: () =>
-          tl.totalTime(tl.rawTime() + tl.duration() * 100),
-      }),
-      length = items.length,
-      startX = items[0].offsetLeft,
-      times = [],
-      widths = [],
-      xPercents = [],
-      curIndex = 0,
-      pixelsPerSecond = (config.speed || 1) * 150,
-      snap =
-        config.snap === false ? (v) => v : gsap.utils.snap(config.snap || 1),
-      totalWidth,
-      curX,
-      distanceToStart,
-      distanceToLoop,
-      item,
-      i;
-    gsap.set(items, {
-      // Responsive ke liye x ko xPercent me convert kar rahe
-      xPercent: (i, el) => {
-        let w = (widths[i] = parseFloat(gsap.getProperty(el, "width", "px")));
-        xPercents[i] = snap(
-          (parseFloat(gsap.getProperty(el, "x", "px")) / w) * 100 +
-            gsap.getProperty(el, "xPercent")
-        );
-        return xPercents[i];
-      },
-    });
-    gsap.set(items, { x: 0 });
-    totalWidth =
-      items[length - 1].offsetLeft +
-      (xPercents[length - 1] / 100) * widths[length - 1] -
-      startX +
-      items[length - 1].offsetWidth *
-        gsap.getProperty(items[length - 1], "scaleX") +
-      (parseFloat(config.paddingRight) || 0);
-    for (i = 0; i < length; i++) {
-      item = items[i];
-      curX = (xPercents[i] / 100) * widths[i];
-      distanceToStart = item.offsetLeft + curX - startX;
-      distanceToLoop =
-        distanceToStart + widths[i] * gsap.getProperty(item, "scaleX");
-      tl.to(
-        item,
-        {
-          xPercent: snap(((curX - distanceToLoop) / widths[i]) * 100),
-          duration: distanceToLoop / pixelsPerSecond,
-        },
-        0
-      )
-        .fromTo(
-          item,
-          {
-            xPercent: snap(
-              ((curX - distanceToLoop + totalWidth) / widths[i]) * 100
-            ),
-          },
-          {
-            xPercent: xPercents[i],
-            duration:
-              (curX - distanceToLoop + totalWidth - curX) / pixelsPerSecond,
-            immediateRender: false,
-          },
-          distanceToLoop / pixelsPerSecond
-        )
-        .add("label" + i, distanceToStart / pixelsPerSecond);
-      times[i] = distanceToStart / pixelsPerSecond;
-    }
-    function toIndex(index, vars) {
-      vars = vars || {};
-      Math.abs(index - curIndex) > length / 2 &&
-        (index += index > curIndex ? -length : length); // shortest direction
-      let newIndex = gsap.utils.wrap(0, length, index),
-        time = times[newIndex];
-      if (time > tl.time() !== index > curIndex) {
-        // wrap ke case me time adjust
-        vars.modifiers = { time: gsap.utils.wrap(0, tl.duration()) };
-        time += tl.duration() * (index > curIndex ? 1 : -1);
-      }
-      curIndex = newIndex;
-      vars.overwrite = true;
-      return tl.tweenTo(time, vars);
-    }
-    tl.next = (vars) => toIndex(curIndex + 1, vars);
-    tl.previous = (vars) => toIndex(curIndex - 1, vars);
-    tl.current = () => curIndex;
-    tl.toIndex = (index, vars) => toIndex(index, vars);
-    tl.times = times;
-    tl.progress(1, true).progress(0, true); // performance ke liye pre-render
-    if (config.reversed) {
-      tl.vars.onReverseComplete();
-      tl.reverse();
-    }
-    return tl;
-  }
-
-  // Scroll Observer: user ke scroll direction ke hisaab se marquee ki speed/direction change hoti hai
-  useEffect(() => {
-    let tl;
-    let observer;
-    let isMounted = true;
-
-    const setup = async () => {
-      // Wait for fonts to load so widths/offsets are correct (prevents overlap)
-      if (document.fonts?.ready) {
-        await document.fonts.ready;
-      }
-      if (!isMounted) return;
-
-      tl = horizontalLoop(itemsRef.current, {
-        repeat: -1,
-        paddingRight: 30,
-        reversed: reverse,
-      });
-
-      // Direction + speed tweak on scroll
-      observer = Observer.create({
-        onChangeY(self) {
-          let factor = 2.5;
-          if ((!reverse && self.deltaY < 0) || (reverse && self.deltaY > 0)) {
-            factor *= -1;
-          }
-          gsap
-            .timeline({
-              defaults: {
-                ease: "none",
-              },
-            })
-            .to(tl, { timeScale: factor * 2.5, duration: 0.2, overwrite: true })
-            .to(tl, { timeScale: factor / 2.5, duration: 1 }, "+=0.3");
-        },
-      });
-    };
-
-    setup();
-
-    return () => {
-      isMounted = false;
-      if (observer) observer.kill();
-      if (tl) tl.kill();
-    };
-  }, [items, reverse]);
+  // Setup marquee animation with scroll reactivity
+  useMarqueeAnimation({ itemsRef, items, reverse });
   return (
     <div
       ref={containerRef}

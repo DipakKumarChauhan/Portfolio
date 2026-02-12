@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import Marquee from "../components/Marquee";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -9,24 +9,31 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ContactSummary = () => {
   const containerRef = useRef(null);
-  // Optimized: use Array methods instead of manual repetition
-  const baseItems = ["Innovation", "Precision", "Trust", "Collaboration", "Excellence"];
-  const items = Array(3).fill(baseItems).flat(); // Repeat 3 times = 15 items
   
-  const items2 = Array(16).fill("let's connect");
+  // Memoize arrays to prevent recreation on every render (prevents marquee resets)
+  const items = useMemo(() => {
+    const baseItems = ["Innovation", "Precision", "Trust", "Collaboration", "Excellence"];
+    return Array(3).fill(baseItems).flat(); // Repeat 3 times = 15 items
+  }, []);
+  
+  const items2 = useMemo(() => 
+    Array(16).fill("let's connect"),
+    []
+  );
 
   // Pinning: section scroll ke dauran screen par fixed rehta hai for impact
   
   useGSAP(() => {
-   ScrollTrigger.create({
+   const st = ScrollTrigger.create({
       trigger: containerRef.current,
       start: "center center",
       end: "+=800 center",
       pin: true,
       pinSpacing: true,
       scrub: 0.5,
-      markers: false,
+      markers: true, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
     });
+    return () => st.kill();
   }, []);
   return (
     <section
