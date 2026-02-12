@@ -50,16 +50,19 @@ const Works = () => {
     const el = overlayRefs.current[index];
     if (!el) return;
 
-    // Ongoing animations ko kill karke fresh fromTo chalana for overlay reveal
-    gsap.killTweensOf(el); // This Line Kills any ongoing animation on the element
+    // Kill ongoing animations for clean transition
+    gsap.killTweensOf(el);
+    
+    // Use scaleY instead of clip-path (GPU-accelerated, much faster!)
     gsap.fromTo(
       el,
       {
-        clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
+        scaleY: 0,
+        transformOrigin: "bottom",
       },
       {
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
-        duration: 0.15,
+        scaleY: 1,
+        duration: 0.2,
         ease: "power2.out",
       }
     );
@@ -80,8 +83,10 @@ const Works = () => {
     if (!el) return;
 
     gsap.killTweensOf(el);
+    
+    // Use scaleY for exit (GPU-accelerated)
     gsap.to(el, {
-      clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
+      scaleY: 0,
       duration: 0.2,
       ease: "power2.in",
     });
@@ -127,7 +132,12 @@ const Works = () => {
               ref={(el) => {
                 overlayRefs.current[index] = el;
               }}
-              className="absolute inset-0 hidden md:block duration-200 bg-black clip-path -z-10"
+              className="absolute inset-0 hidden md:block bg-black z-0"
+              style={{ 
+                transform: 'scaleY(0)', 
+                transformOrigin: 'bottom',
+                willChange: 'transform' 
+              }}
             />
 
             {/* title + link to project */}
