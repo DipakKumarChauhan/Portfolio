@@ -26,7 +26,7 @@ const ContactSummary = () => {
   useGSAP(() => {
    const st = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: "top top",
+      start: "center top",
       end: "+=1000 top",
       pin: true,
       pinSpacing: true,
