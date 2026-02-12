@@ -30,7 +30,7 @@ const ContactSummary = () => {
       end: "+=1000 top",
       pin: true,
       pinSpacing: true,
-      markers: true, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
+      markers: false, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
     });
     return () => st.kill();
   }, []);
