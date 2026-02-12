@@ -32,31 +32,31 @@ const SectionFallback = () => (
 const App = () => {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
-  const [fakeProgress, setFakeProgress] = useState(50) // Pehle hi user ko max progress dikha do taaki esa lage ki website jaldi load ho rahi hai
 
-  // Jab loading 100% ho jaye, tab content dikhana start karte hain
+  // Simple loader: just wait for 3D assets to load
   useEffect(() => {
-    if (progress < 100) {
-    setFakeProgress(p => Math.min(p + 0.5, 95));
-  } else {
-    setFakeProgress(100);
-    setIsReady(true);
-  }
+    if (progress === 100) {
+      // Small delay for smooth transition
+      const timeout = setTimeout(() => {
+        setIsReady(true);
+      }, 500);
+      return () => clearTimeout(timeout);
+    }
   }, [progress]);
   return (
     
     // ReactLenis root: poori app par smooth scrolling apply hota hai
     <ReactLenis root className='relative w-screen min-h-screen overflow-x-auto'>
-      {/* Jab tak assets load ho rahe, simple loader dikhao */}
+      {/* Simple loading screen */}
       {!isReady && (
         <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700 font-light">
           <p className="mb-4 text-xl tracking-widest animate-pulse">
-            Loading {Math.floor(fakeProgress)}%
+            Loading {Math.floor(progress)}%
           </p>
           <div className="relative h-1 overflow-hidden rounded w-60 bg-white/20">
             <div
               className="absolute top-0 left-0 h-full transition-all duration-300 bg-white"
-              style={{ width: `${fakeProgress}%` }}
+              style={{ width: `${progress}%` }}
             ></div>
           </div>
         </div>

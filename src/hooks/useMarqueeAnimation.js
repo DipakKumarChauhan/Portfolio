@@ -48,10 +48,10 @@ export function useMarqueeAnimation({ itemsRef, items, reverse }) {
       const validItems = currentItems.filter(item => item !== null && item !== undefined);
       if (validItems.length === 0) return;
 
-      // Clear ONLY specific GSAP properties (not all inline styles - React needs those!)
+      // Clear ONLY animation properties (preserve xPercent - horizontalLoop needs it!)
       validItems.forEach(item => {
         if (item && item._gsap) {
-          gsap.set(item, { clearProps: "x,y,xPercent,yPercent,rotation,scale,opacity" });
+          gsap.set(item, { clearProps: "x,y,rotation,scale,opacity" });
         }
       });
 
@@ -111,13 +111,13 @@ export function useMarqueeAnimation({ itemsRef, items, reverse }) {
         tl = null;
       }
       
-      // Clear ONLY specific GSAP properties (not all inline styles - React needs those!)
+      // Clear ONLY animation properties (preserve xPercent - horizontalLoop needs it!)
       // Only clear properties if elements exist AND have GSAP properties
       if (currentItems && currentItems.length > 0) {
         currentItems.forEach(item => {
           if (item && item._gsap) {
             try {
-              gsap.set(item, { clearProps: "x,y,xPercent,yPercent,rotation,scale,opacity" });
+              gsap.set(item, { clearProps: "x,y,rotation,scale,opacity" });
             } catch (e) {
               // Silently fail if element is no longer in DOM
               console.debug("Failed to clear GSAP props:", e);

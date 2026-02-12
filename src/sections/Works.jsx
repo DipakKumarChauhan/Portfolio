@@ -38,7 +38,7 @@ const Works = () => {
       stagger: 0.3,
       ease: "back.out",
       scrollTrigger: {
-        trigger: "#project",
+        trigger: ".project",
       },
     });
   }, []);
@@ -103,7 +103,7 @@ const Works = () => {
   };
 
   return (
-    <section id="work" className="flex flex-col min-h-screen">
+    <section id="work" className="flex flex-col min-h-screen relative z-10">
       <AnimatedHeaderSection
         subTitle={"Logic meets Aesthetics, Seamlessly"}
         title={"Works"}
@@ -118,7 +118,7 @@ const Works = () => {
         {projects.map((project, index) => (
           <div
             key={project.id}
-            className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 project z-10" // z-index lower than the ContactSummary
+            className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 project" // z-index lower than the ContactSummary
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={() => handleMouseLeave(index)}
           >
@@ -127,7 +127,7 @@ const Works = () => {
               ref={(el) => {
                 overlayRefs.current[index] = el;
               }}
-              className="absolute inset-0 hidden md:block duration-200 bg-black z-0 clip-path"
+              className="absolute inset-0 hidden md:block duration-200 bg-black clip-path"
             />
 
             {/* title + link to project */}

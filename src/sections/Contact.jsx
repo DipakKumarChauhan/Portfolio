@@ -30,7 +30,7 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="flex flex-col justify-between min-h-screen bg-black"
+      className="flex flex-col justify-between min-h-screen bg-black relative z-30"
     >
       <div>
         {/* Heading + paragraph (white theme) */}

@@ -27,7 +27,7 @@ const ContactSummary = () => {
    const st = ScrollTrigger.create({
       trigger: containerRef.current,
       start: "center center",
-      end: "+=50% center",
+      end: "+=800 center",
       pin: true,
       pinSpacing: true,
       scrub: 0.5,
@@ -38,7 +38,8 @@ const ContactSummary = () => {
   return (
     <section
       ref={containerRef}
-      className="flex flex-col items-center justify-between min-h-screen gap-12 mt-16 relative z-50" // Added relative z-50 which creates stacking context above everything
+      className="flex flex-col items-center justify-between min-h-screen gap-12 mt-16 relative z-50"
+      style={{ willChange: 'auto' }}
     >
       {/* Top marquee: values/traits */}
       <Marquee items={items} />
