@@ -46,7 +46,7 @@ const Marquee = ({
       <div className="flex flex-nowrap">
         {items.map((text, index) => (
           <span
-            key={index}
+            key={`${text}-${index}`}
             ref={(el) => (itemsRef.current[index] = el)}
             className="flex items-center px-16 gap-x-32 shrink-0 whitespace-nowrap"
           >
@@ -58,4 +58,4 @@ const Marquee = ({
   );
 };
 
-export default React.memo(Marquee);
+export default Marquee;
