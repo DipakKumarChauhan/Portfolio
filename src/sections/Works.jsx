@@ -118,7 +118,7 @@ const Works = () => {
         {projects.map((project, index) => (
           <div
             key={project.id}
-            className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 project "
+            className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0 project z-10" // z-index lower than the ContactSummary
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={() => handleMouseLeave(index)}
           >
