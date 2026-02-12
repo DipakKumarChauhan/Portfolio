@@ -31,7 +31,7 @@ const ContactSummary = () => {
       pin: true,
       pinSpacing: true,
       scrub: 0.5,
-      markers: true, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
+      markers: false, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
     });
     return () => st.kill();
   }, []);
