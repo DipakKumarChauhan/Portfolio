@@ -26,19 +26,18 @@ const ContactSummary = () => {
   useGSAP(() => {
    const st = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: "center center",
-      end: "+=800 center",
+      start: "top top",
+      end: "+=1000 top",
       pin: true,
       pinSpacing: true,
-      scrub: 0.5,
-      markers: false, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
+      markers: true, // 🔍 DEBUG MODE: Shows pin start/end markers on screen
     });
     return () => st.kill();
   }, []);
   return (
     <section
       ref={containerRef}
-      className="flex flex-col items-center justify-between min-h-screen gap-12 mt-16 relative z-50"
+      className="flex flex-col items-center justify-between min-h-screen gap-12  relative z-50"
       style={{ willChange: 'auto' }}
     >
       {/* Top marquee: values/traits */}
