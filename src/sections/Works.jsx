@@ -103,7 +103,7 @@ const Works = () => {
   };
 
   return (
-    <section id="work" className="flex flex-col min-h-screen relative z-10 mb-16">
+    <section id="work" className="flex flex-col min-h-screen relative -z-10 mb-16">
       <AnimatedHeaderSection
         subTitle={"Logic meets Aesthetics, Seamlessly"}
         title={"Works"}

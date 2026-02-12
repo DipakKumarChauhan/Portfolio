@@ -91,7 +91,7 @@ const App = () => {
           </p>
           <div className="relative h-1 overflow-hidden rounded w-60 bg-white/20">
             <div
-              className="absolute top-0 left-0 h-full transition-all duration-300 bg-white"
+              className="absolute top-0 left-0 h-full bg-white"
               style={{ width: `${progress || 0}%` }}
             ></div>
           </div>
