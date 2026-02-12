@@ -35,27 +35,40 @@ const SectionFallback = () => (
 const App = () => {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  // Loader: wait for 3D assets OR timeout after 2 seconds
+  // Wait for fonts to load (critical for production!)
   useEffect(() => {
-    // If 3D assets loaded, show content
-    if (progress >= 100) {
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        setFontsLoaded(true);
+      });
+    } else {
+      // Fallback for browsers without FontFaceSet API
+      setFontsLoaded(true);
+    }
+  }, []);
+
+  // Loader: wait for 3D assets AND fonts, OR timeout after 3 seconds
+  useEffect(() => {
+    // If 3D assets loaded AND fonts loaded, show content
+    if (progress >= 100 && fontsLoaded) {
       const timeout = setTimeout(() => {
         setIsReady(true);
       }, 500);
       return () => clearTimeout(timeout);
     }
     
-    // Fallback: Show content after 2 seconds even if progress stuck
+    // Fallback: Show content after 3 seconds even if stuck
     const fallbackTimeout = setTimeout(() => {
       if (!isReady) {
         console.log('Loader timeout - showing content');
         setIsReady(true);
       }
-    }, 2000);
+    }, 3000);
     
     return () => clearTimeout(fallbackTimeout);
-  }, [progress, isReady]);
+  }, [progress, fontsLoaded, isReady]);
 
   // Preload lazy sections after app is ready (helps with first load)
   useEffect(() => {
@@ -79,6 +92,20 @@ const App = () => {
       return () => preloadTimers.forEach(clearTimeout);
     }
   }, [isReady]);
+
+  // CRITICAL: Refresh GSAP ScrollTrigger after everything loads
+  useEffect(() => {
+    if (isReady && fontsLoaded) {
+      // Wait for React to render, then refresh all ScrollTriggers
+      const refreshTimer = setTimeout(async () => {
+        // Dynamic import to avoid SSR issues
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+        ScrollTrigger.refresh(true); // Force refresh with invalidation
+      }, 500);
+      
+      return () => clearTimeout(refreshTimer);
+    }
+  }, [isReady, fontsLoaded]);
   return (
     
     // ReactLenis root: poori app par smooth scrolling apply hota hai

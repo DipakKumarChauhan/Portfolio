@@ -26,7 +26,7 @@ const ContactSummary = () => {
   useGSAP(() => {
    const st = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: "center top",
+      start: "top top",
       end: "+=1000 top",
       pin: true,
       pinSpacing: true,
@@ -37,7 +37,7 @@ const ContactSummary = () => {
   return (
     <section
       ref={containerRef}
-      className="flex flex-col items-center justify-between min-h-screen gap-12  relative z-50"
+      className="flex flex-col items-center justify-between min-h-screen gap-12 relative z-50 bg-white"
       style={{ willChange: 'auto' }}
     >
       {/* Top marquee: values/traits */}

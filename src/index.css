@@ -115,6 +115,16 @@ body {
   scroll-behavior: smooth;
   overflow-x: hidden;
   font-family: var(--font-amiamie);
+  /* Force font rendering before layout (production fix) */
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent layout shift during font load (production fix) */
+* {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
 @utility clip-path {

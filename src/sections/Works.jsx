@@ -103,7 +103,7 @@ const Works = () => {
   };
 
   return (
-    <section id="work" className="flex flex-col min-h-screen relative -z-10 mb-16">
+    <section id="work" className="flex flex-col min-h-screen relative z-10 bg-white pb-16">
       <AnimatedHeaderSection
         subTitle={"Logic meets Aesthetics, Seamlessly"}
         title={"Works"}
@@ -127,7 +127,7 @@ const Works = () => {
               ref={(el) => {
                 overlayRefs.current[index] = el;
               }}
-              className="absolute inset-0 hidden md:block duration-200 bg-black clip-path"
+              className="absolute inset-0 hidden md:block duration-200 bg-black clip-path -z-10"
             />
 
             {/* title + link to project */}
@@ -141,11 +141,11 @@ const Works = () => {
             {/* This is a Test Title  */}
             
             {/* title */}
-<div className="flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
+<div className="relative z-10 flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
   <h2 className="lg:text-[32px] text-[26px] leading-none">
     {project.name}
   </h2>
-  <a href={project.href} target="_blank" rel="noopener noreferrer">
+  <a href={project.href} target="_blank" rel="noopener noreferrer" className="text-black transition-colors duration-500 md:group-hover:text-white">
     <SafeIcon 
       Icon={FiArrowUpRight} 
       iconName="works-arrow"
@@ -156,9 +156,9 @@ const Works = () => {
 
 
             {/* divider */}
-            <div className="w-full h-0.5 bg-black/80" />
+            <div className="relative z-10 w-full h-0.5 bg-black/80 transition-colors duration-500 md:group-hover:bg-white" />
             {/* framework badges */}
-            <div className="flex px-10 text-xs leading-loose uppercase transtion-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
+            <div className="relative z-10 flex px-10 text-xs leading-loose uppercase transtion-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
               {project.frameworks.map((framework) => (
                 <p
                   key={framework.id}
