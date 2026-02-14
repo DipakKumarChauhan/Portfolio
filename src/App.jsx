@@ -19,13 +19,10 @@ const Works = lazy(() => import('./sections/Works'));
 const ContactSummary = lazy(() => import('./sections/ContactSummary'));
 const Contact = lazy(() => import('./sections/Contact'));
 
-// Loading fallback - shows while lazy sections load
+// Loading fallback
 const SectionFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-black">
-    <div className="flex flex-col items-center gap-4">
-      <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-      <p className="text-white/50 text-sm">Loading section...</p>
-    </div>
+    <p className="text-white/50">Loading section...</p>
   </div>
 );
 
@@ -35,91 +32,55 @@ const SectionFallback = () => (
 const App = () => {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [fakeProgress, setFakeProgress] = useState(50) // Pehle hi user ko max progress dikha do taaki esa lage ki website jaldi load ho rahi hai
+  
+  // Track which lazy sections have loaded
+  const [loadedSections, setLoadedSections] = useState({
+    serviceSummary: false,
+    services: false,
+    about: false,
+    works: false,
+    contactSummary: false,
+    contact: false,
+  });
 
-  // Wait for fonts to load (critical for production!)
-  useEffect(() => {
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        setFontsLoaded(true);
-      });
-    } else {
-      // Fallback for browsers without FontFaceSet API
-      setFontsLoaded(true);
-    }
-  }, []);
+  // Function to mark a section as loaded
+  const markSectionLoaded = (sectionName) => {
+    setLoadedSections(prev => ({ ...prev, [sectionName]: true }));
+  };
 
-  // Loader: wait for 3D assets AND fonts, OR timeout after 3 seconds
+  // Check if all critical sections are loaded
+  const allSectionsLoaded = Object.values(loadedSections).every(v => v);
+
+  // Update progress based on both 3D assets and component loading
   useEffect(() => {
-    // If 3D assets loaded AND fonts loaded, show content
-    if (progress >= 100 && fontsLoaded) {
-      const timeout = setTimeout(() => {
-        setIsReady(true);
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
+    const sectionsProgress = Object.values(loadedSections).filter(v => v).length;
+    const totalSections = Object.keys(loadedSections).length;
+    const componentProgress = (sectionsProgress / totalSections) * 40; // 40% of total
+    const assetProgress = (progress / 100) * 60; // 60% of total
     
-    // Fallback: Show content after 3 seconds even if stuck
-    const fallbackTimeout = setTimeout(() => {
-      if (!isReady) {
-        console.log('Loader timeout - showing content');
-        setIsReady(true);
-      }
-    }, 3000);
-    
-    return () => clearTimeout(fallbackTimeout);
-  }, [progress, fontsLoaded, isReady]);
+    const totalProgress = componentProgress + assetProgress;
+    setFakeProgress(Math.min(Math.floor(totalProgress), 100));
 
-  // Preload lazy sections after app is ready (helps with first load)
-  useEffect(() => {
-    if (isReady) {
-      // Preload sections progressively
-      const preloadTimers = [
-        setTimeout(() => {
-          import('./sections/ServiceSummary').catch(console.error);
-          import('./sections/Services').catch(console.error);
-        }, 100),
-        setTimeout(() => {
-          import('./sections/About').catch(console.error);
-          import('./sections/Works').catch(console.error);
-        }, 500),
-        setTimeout(() => {
-          import('./sections/ContactSummary').catch(console.error);
-          import('./sections/Contact').catch(console.error);
-        }, 1000),
-      ];
-      
-      return () => preloadTimers.forEach(clearTimeout);
+    // Only set ready when BOTH 3D assets and all sections are loaded
+    if (progress === 100 && allSectionsLoaded) {
+      setIsReady(true);
     }
-  }, [isReady]);
-
-  // CRITICAL: Refresh GSAP ScrollTrigger after everything loads
-  useEffect(() => {
-    if (isReady && fontsLoaded) {
-      // Wait for React to render, then refresh all ScrollTriggers
-      const refreshTimer = setTimeout(async () => {
-        // Dynamic import to avoid SSR issues
-        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-        ScrollTrigger.refresh(true); // Force refresh with invalidation
-      }, 500);
-      
-      return () => clearTimeout(refreshTimer);
-    }
-  }, [isReady, fontsLoaded]);
+  }, [progress, loadedSections, allSectionsLoaded]);
   return (
     
     // ReactLenis root: poori app par smooth scrolling apply hota hai
     <ReactLenis root className='relative w-screen min-h-screen overflow-x-auto'>
-      {/* Loading screen with fallback */}
+      {/* Jab tak assets load ho rahe, simple loader dikhao */}
       {!isReady && (
         <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700 font-light">
           <p className="mb-4 text-xl tracking-widest animate-pulse">
-            Loading {Math.floor(progress || 0)}%
+            Loading {Math.floor(fakeProgress)}%
           </p>
           <div className="relative h-1 overflow-hidden rounded w-60 bg-white/20">
             <div
-              className="absolute top-0 left-0 h-full bg-white"
-              style={{ width: `${progress || 0}%` }}
+              className="absolute top-0 left-0 h-full transition-all duration-300 bg-white"
+              style={{ width: `${fakeProgress}%` }}
             ></div>
           </div>
         </div>
@@ -141,37 +102,37 @@ const App = () => {
       {/* Lazy load heavy sections */}
       <ErrorBoundary componentName="ServiceSummary">
         <Suspense fallback={<SectionFallback />}>
-          <ServiceSummary/>  
+          <ServiceSummary onReady={() => markSectionLoaded('serviceSummary')}/>  
         </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary componentName="Services">
         <Suspense fallback={<SectionFallback />}>
-          <Services/> 
+          <Services onReady={() => markSectionLoaded('services')}/> 
         </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary componentName="About">
         <Suspense fallback={<SectionFallback />}>
-          <About/>
+          <About onReady={() => markSectionLoaded('about')}/>
         </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary componentName="Works">
         <Suspense fallback={<SectionFallback />}>
-          <Works/>
+          <Works onReady={() => markSectionLoaded('works')}/>
         </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary componentName="ContactSummary">
         <Suspense fallback={<SectionFallback />}>
-          <ContactSummary/>
+          <ContactSummary onReady={() => markSectionLoaded('contactSummary')}/>
         </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary componentName="Contact">
         <Suspense fallback={<SectionFallback />}>
-          <Contact/>
+          <Contact onReady={() => markSectionLoaded('contact')}/>
         </Suspense>
       </ErrorBoundary>
       </div>

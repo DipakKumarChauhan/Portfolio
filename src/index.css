@@ -115,16 +115,6 @@ body {
   scroll-behavior: smooth;
   overflow-x: hidden;
   font-family: var(--font-amiamie);
-  /* Force font rendering before layout (production fix) */
-  font-display: swap;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Prevent layout shift during font load (production fix) */
-* {
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
 }
 
 @utility clip-path {
@@ -132,11 +122,11 @@ body {
 }
 
 @utility banner-text-responsive {
-  @apply text-[68px] sm:text-[118px] md:text-[126px] lg:text-[152px] leading-12 sm:leading-16 lg:leading-27 ;
+  @apply text-[68px] sm:text-[118px] md:text-[126px] lg:text-[152px] leading-12 sm:leading-22 lg:leading-27 ;
 }
 
 @utility value-text-responsive {
-  @apply text-2xl md:text-[26px] lg:text-[32px];
+  @apply text-lg sm:text-xl md:text-2xl lg:text-[32px] leading-relaxed sm:leading-relaxed md:leading-loose lg:leading-loose;
 }
 
 @utility marquee-text-responsive {

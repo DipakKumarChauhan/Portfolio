@@ -1,10 +1,15 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import AnimatedHeaderSection from "../components/AnimatedHeaderSection";
 import { AnimatedTextLines } from "../components/AnimatedTextLInes";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-const About = () => {
+const About = ({ onReady }) => {
+  // Notify parent when component is mounted and ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
+
   // Intro lines: section ke liye short context text
   const text = `I’m someone who enjoys connecting logic with imagination — blending structure with creativity to make ideas come alive. For me, technology is not just problem-solving, it is a canvas to think differently.`;
   // Detailed about: line-by-line animate hoga

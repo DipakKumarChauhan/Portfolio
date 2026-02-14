@@ -1,13 +1,18 @@
 import React from "react";
 import AnimatedHeaderSection from "../components/AnimatedHeaderSection";
 import { projects } from "../constants";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { FiArrowUpRight } from "react-icons/fi";
 import SafeIcon from "../utils/SafeIcon";
 
-const Works = () => {
+const Works = ({ onReady }) => {
+  // Notify parent when component is mounted and ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
+
   const overlayRefs = useRef([]);
   const previewRef = useRef(null);
 
@@ -50,19 +55,16 @@ const Works = () => {
     const el = overlayRefs.current[index];
     if (!el) return;
 
-    // Kill ongoing animations for clean transition
-    gsap.killTweensOf(el);
-    
-    // Use scaleY instead of clip-path (GPU-accelerated, much faster!)
+    // Ongoing animations ko kill karke fresh fromTo chalana for overlay reveal
+    gsap.killTweensOf(el); // This Line Kills any ongoing animation on the element
     gsap.fromTo(
       el,
       {
-        scaleY: 0,
-        transformOrigin: "bottom",
+        clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
       },
       {
-        scaleY: 1,
-        duration: 0.2,
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+        duration: 0.15,
         ease: "power2.out",
       }
     );
@@ -83,10 +85,8 @@ const Works = () => {
     if (!el) return;
 
     gsap.killTweensOf(el);
-    
-    // Use scaleY for exit (GPU-accelerated)
     gsap.to(el, {
-      scaleY: 0,
+      clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
       duration: 0.2,
       ease: "power2.in",
     });
@@ -108,7 +108,7 @@ const Works = () => {
   };
 
   return (
-    <section id="work" className="flex flex-col min-h-screen relative z-10 bg-white pb-16">
+    <section id="work" className="flex flex-col min-h-screen relative -z-10 mb-16">
       <AnimatedHeaderSection
         subTitle={"Logic meets Aesthetics, Seamlessly"}
         title={"Works"}
@@ -132,12 +132,7 @@ const Works = () => {
               ref={(el) => {
                 overlayRefs.current[index] = el;
               }}
-              className="absolute inset-0 hidden md:block bg-black z-0"
-              style={{ 
-                transform: 'scaleY(0)', 
-                transformOrigin: 'bottom',
-                willChange: 'transform' 
-              }}
+              className="absolute inset-0 hidden md:block duration-200 bg-black clip-path"
             />
 
             {/* title + link to project */}
@@ -151,11 +146,11 @@ const Works = () => {
             {/* This is a Test Title  */}
             
             {/* title */}
-<div className="relative z-10 flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
+<div className="flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
   <h2 className="lg:text-[32px] text-[26px] leading-none">
     {project.name}
   </h2>
-  <a href={project.href} target="_blank" rel="noopener noreferrer" className="text-black transition-colors duration-500 md:group-hover:text-white">
+  <a href={project.href} target="_blank" rel="noopener noreferrer">
     <SafeIcon 
       Icon={FiArrowUpRight} 
       iconName="works-arrow"
@@ -166,9 +161,9 @@ const Works = () => {
 
 
             {/* divider */}
-            <div className="relative z-10 w-full h-0.5 bg-black/80 transition-colors duration-500 md:group-hover:bg-white" />
+            <div className="w-full h-0.5 bg-black/80" />
             {/* framework badges */}
-            <div className="relative z-10 flex px-10 text-xs leading-loose uppercase transtion-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
+            <div className="flex px-10 text-xs leading-loose uppercase transtion-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
               {project.frameworks.map((framework) => (
                 <p
                   key={framework.id}

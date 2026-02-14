@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import AnimatedHeaderSection from "../components/AnimatedHeaderSection";
 import Marquee from "../components/Marquee";
@@ -6,7 +6,12 @@ import { socials } from "../constants";
 import SafeIcon from "../utils/SafeIcon";
 import gsap from "gsap";
 
-const Contact = () => {
+const Contact = ({ onReady }) => {
+  // Notify parent when component is mounted and ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
+
   // Section description text (CTA style)
   const text = `Got a question, how or project Idea?
     I'd love to hear from you and discus further!`;

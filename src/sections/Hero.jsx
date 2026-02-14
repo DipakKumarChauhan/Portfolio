@@ -1,23 +1,15 @@
 
 import { Canvas } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
-import { ScrollTrigger } from 'gsap/all';
 import { Planet } from '../components/Planet';
 import { Environment, Lightformer } from '@react-three/drei';
 import AnimatedHeaderSection from '../components/AnimatedHeaderSection';
 import { useMediaQuery } from 'react-responsive';
-import { useEffect } from 'react';
 import React from 'react'
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap'
-
-// GSAP ScrollTrigger: scroll ke sath animations control karne ke liye
-// React Three Fiber + drei: 3D scene banane ke liye
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
-    const isMobile = useMediaQuery({ query: '(max-width: 853px)' });
+    // Detect tablet and mobile devices to disable heavy 3D rendering
+    const isTablet = useMediaQuery({ query: '(max-width: 1024px)' });
 
     // Header ke neeche intro text (short bio)
     const text =  `I Am AI,Deep Learning , Machine Learning Enthusiast.
@@ -35,6 +27,8 @@ const Hero = () => {
           textColor = {"text-black"}/>
 
         {/* Background 3D canvas: planet with lights and subtle motion */}
+        {/* Only render on desktop (>1024px) for optimal mobile performance */}
+        {!isTablet ? (
         <figure className='absolute inset-0 -z-50' style = {{width:"100vw" , height:"100vh"}}>
         <Canvas shadows camera = {{ position:[0,0,-10], fov:17.5,near:1,far:20}}>
             {/* Ambient + directional lights: scene ko illuminate karne ke liye */}
@@ -89,6 +83,11 @@ const Hero = () => {
             </Environment>
         </Canvas>
         </figure>
+        ) : (
+            /* Fallback: Elegant gradient background for mobile/tablet */
+            <div className='absolute inset-0 -z-50 bg-gradient-to-br from-primary via-SageGray/20 to-primary' 
+                 style={{width:"100vw", height:"100vh"}} />
+        )}
     </section>
   )
 }

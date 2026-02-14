@@ -1,4 +1,4 @@
-import React, { use, useRef } from 'react'
+import React, { use, useRef, useEffect } from 'react'
 import AnimatedHeaderSection from '../components/AnimatedHeaderSection'
 import { serviceData } from "../constants";
 import { useGSAP } from '@gsap/react';
@@ -11,7 +11,12 @@ import { useMediaQuery } from 'react-responsive';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Services = () => {
+const Services = ({ onReady }) => {
+  // Notify parent when component is mounted and ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
+
   const text = `I Am AI, Deep Learning, Machine Learning Enthusiast.
   I am also a Web Developer with more hands-on experience on Backend.
   I love to work on new and exciting projects.`;

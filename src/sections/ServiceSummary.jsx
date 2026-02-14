@@ -1,11 +1,16 @@
 import { useGSAP } from '@gsap/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/all'
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ServiceSummary = () => {
+const ServiceSummary = ({ onReady }) => {
+  // Notify parent when component is mounted and ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
+
   // Horizontal parallax-style motion: headings scroll ke sath x-axis par move hote hain
   useGSAP(() => {
     gsap.to('#title-service-1', {

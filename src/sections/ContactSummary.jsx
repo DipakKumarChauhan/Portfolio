@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import Marquee from "../components/Marquee";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -7,7 +7,12 @@ import { FiSquare } from "react-icons/fi";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ContactSummary = () => {
+const ContactSummary = ({ onReady }) => {
+  // Notify parent when component is mounted and ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
+
   const containerRef = useRef(null);
   
   // Memoize arrays to prevent recreation on every render (prevents marquee resets)
