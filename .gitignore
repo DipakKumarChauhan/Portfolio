@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment and temporary files
+.env
+.env.local
+.env.*.local
+.gemini/
+brain/
+.agents/
+.agent/
+_agents/
+_agent/
