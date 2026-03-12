@@ -6,11 +6,11 @@ export const serviceData = [
     items: [
       {
         title: "Backend Engineering",
-        description: "(REST/GraphQL APIs, Microservices, Auth Systems)",
+        description: "(REST APIs, Microservices, Auth Systems)",
       },
       {
         title: "Frontend Excellence",
-        description: "(React, Vue, TypeScript, Interactive UI/UX)",
+        description: "(HTML,CSS,JS,React,Interactive UI/UX)",
       },
       {
         title: "Database Design",
@@ -27,17 +27,21 @@ export const serviceData = [
         title: "Supervised Learning",
         description: "(Regression, Classification, Scikit-Learn)",
       },
-      {
-        title: "Unsupervised Learning",
-        description: "(Clustering, Dimensionality Reduction, Pattern Discovery)",
-      },
+      // {
+      //   title: "Unsupervised Learning",
+      //   description: "(Clustering, Dimensionality Reduction, Pattern Discovery)",
+      // },
       {
         title: "Model Evaluation",
         description: "(Cross-Validation, Accuracy, Precision/Recall, F1 Score)",
       },
+      {
+        title: "Data Engineering",
+        description: "(Data Cleaning, Data Transformation, Data Visualization)",
+      },
     ],
   },
-  
+
   {
     title: "Deep Learning",
     description:
@@ -57,7 +61,7 @@ export const serviceData = [
       },
     ],
   },
-  
+
   {
     title: "Artificial Intelligence",
     description:
@@ -73,9 +77,9 @@ export const serviceData = [
       },
       {
         title: "Generative AI",
-        description: "(Text Generation, Fine-Tuning Pretrained Models)",
+        description: "(Text Generation, Chatbots, RAG, Tool Calling, AI Agents)",
       },
     ],
   }
-  
+
 ];

@@ -13,18 +13,19 @@ const Works = ({ onReady }) => {
     onReady?.();
   }, [onReady]);
 
-  const overlayRefs = useRef([]);
   const previewRef = useRef(null);
 
   const [currentIndex, setCurrentIndex] = useState(null);
   const text = `A collection of projects I built while exploring new concepts, each one marking a step forward in my growth as a developer.`;
 
   const mouse = useRef({ x: 0, y: 0 });
-  const moveX = useRef(null);
-  const moveY = useRef(null);
+  const moveX = useRef((val) => val);
+  const moveY = useRef((val) => val);
 
     // Cursor se attached preview image: motion ko smooth rakhne ke liye quickTo use kiya
   useGSAP(() => {
+    gsap.set(previewRef.current, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
+
     moveX.current = gsap.quickTo(previewRef.current, "x", {
       duration: 1.5,
       ease: "power3.out",
@@ -44,6 +45,7 @@ const Works = ({ onReady }) => {
       ease: "back.out",
       scrollTrigger: {
         trigger: ".project",
+        start: "top 80%",
       },
     });
   }, []);
@@ -52,47 +54,22 @@ const Works = ({ onReady }) => {
     if (window.innerWidth < 768) return;
     setCurrentIndex(index);
 
-    const el = overlayRefs.current[index];
-    if (!el) return;
-
-    // Ongoing animations ko kill karke fresh fromTo chalana for overlay reveal
-    gsap.killTweensOf(el); // This Line Kills any ongoing animation on the element
-    gsap.fromTo(
-      el,
-      {
-        clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
-      },
-      {
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
-        duration: 0.15,
+    if (projects[index].image) {
+      gsap.to(previewRef.current, {
+        autoAlpha: 1,
+        scale: 1,
+        duration: 0.3,
         ease: "power2.out",
-      }
-    );
-
-    gsap.to(previewRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.3,
-      ease: "power2.out",
-    });
+      });
+    }
   };
 
   const handleMouseLeave = (index) => {
     if (window.innerWidth < 768) return;
     setCurrentIndex(null);
 
-    const el = overlayRefs.current[index];
-    if (!el) return;
-
-    gsap.killTweensOf(el);
-    gsap.to(el, {
-      clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
-      duration: 0.2,
-      ease: "power2.in",
-    });
-
     gsap.to(previewRef.current, {
-      opacity: 0,
+      autoAlpha: 0,
       scale: 0.95,
       duration: 0.3,
       ease: "power2.out",
@@ -101,14 +78,15 @@ const Works = ({ onReady }) => {
 
   const handleMouseMove = (e) => {
     if (window.innerWidth < 768) return;
-    mouse.current.x = e.clientX + 24;
+    // Increase offset to prevent obscuring links
+    mouse.current.x = e.clientX + 150;
     mouse.current.y = e.clientY + 24;
-    moveX.current(mouse.current.x);
-    moveY.current(mouse.current.y);
+    if (typeof moveX.current === "function") moveX.current(mouse.current.x);
+    if (typeof moveY.current === "function") moveY.current(mouse.current.y);
   };
 
   return (
-    <section id="work" className="flex flex-col min-h-screen relative -z-10 mb-16">
+    <section id="work" className="flex flex-col min-h-screen relative mb-16">
       <AnimatedHeaderSection
         subTitle={"Logic meets Aesthetics, Seamlessly"}
         title={"Works"}
@@ -127,13 +105,6 @@ const Works = ({ onReady }) => {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={() => handleMouseLeave(index)}
           >
-            {/* hover overlay */}
-            <div
-              ref={(el) => {
-                overlayRefs.current[index] = el;
-              }}
-              className="absolute inset-0 hidden md:block duration-200 bg-black clip-path"
-            />
 
             {/* title + link to project */}
             {/* <div className="flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
@@ -146,28 +117,51 @@ const Works = ({ onReady }) => {
             {/* This is a Test Title  */}
             
             {/* title */}
-<div className="flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
-  <h2 className="lg:text-[32px] text-[26px] leading-none">
-    {project.name}
-  </h2>
-  <a href={project.href} target="_blank" rel="noopener noreferrer">
-    <SafeIcon 
-      Icon={FiArrowUpRight} 
-      iconName="works-arrow"
-      className="md:size-6 size-5"
-    />
-  </a>
-</div>
+            <div className="flex justify-between px-10 text-black transition-all duration-500">
+              <h2 className="lg:text-[32px] text-[26px] leading-none">
+                {project.name}
+              </h2>
+              <div className="flex items-center gap-4">
+                {project.liveLink && (
+                  <a 
+                    href={project.liveLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-sm font-medium hover:text-gold transition-colors duration-300"
+                  >
+                    <span>Live</span>
+                    <SafeIcon 
+                      Icon={FiArrowUpRight} 
+                      iconName="live-link-arrow"
+                      className="size-4"
+                    />
+                  </a>
+                )}
+                <a 
+                  href={project.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-sm font-medium hover:text-gold transition-colors duration-300"
+                >
+                  <span>GitHub</span>
+                  <SafeIcon 
+                    Icon={FiArrowUpRight} 
+                    iconName="github-link-arrow"
+                    className="size-4"
+                  />
+                </a>
+              </div>
+            </div>
 
 
             {/* divider */}
             <div className="w-full h-0.5 bg-black/80" />
             {/* framework badges */}
-            <div className="flex px-10 text-xs leading-loose uppercase transtion-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
+            <div className="flex px-10 text-xs leading-loose uppercase transition-all duration-500 md:text-sm gap-x-5">
               {project.frameworks.map((framework) => (
                 <p
                   key={framework.id}
-                  className="text-black transition-colors duration-500 md:group-hover:text-white"
+                  className="text-black/60"
                 >
                   {framework.name}
                 </p>
@@ -176,19 +170,19 @@ const Works = ({ onReady }) => {
             {/* mobile preview hidden for now */}
           </div>
         ))}
-        {/* desktop floating preview (optional, currently disabled) */}
-        {/* <div
+        {/* desktop floating preview */}
+        <div
           ref={previewRef}
-          className="fixed -top-2/6 left-0 z-50 overflow-hidden border-8 border-black pointer-events-none w-[960px] md:block hidden opacity-0"
+          className="fixed top-0 left-0 pointer-events-none z-[999] w-[400px] aspect-video overflow-hidden border-4 border-black bg-white opacity-0 shadow-2xl"
         >
-          {currentIndex !== null && (
+          {currentIndex !== null && projects[currentIndex].image && (
             <img
               src={projects[currentIndex].image}
               alt="preview"
               className="object-cover w-full h-full"
             />
           )}
-        </div> */}
+        </div>
       </div>
     </section>
   );

@@ -22,7 +22,7 @@ const Services = ({ onReady }) => {
   I love to work on new and exciting projects.`;
 
   const serviceRef = useRef([]);
-  const isDesktop = useMediaQuery({minWidth: "48rem"});
+  const isDesktop = useMediaQuery({ minWidth: "48rem" });
   useGSAP(() => {
     serviceRef.current.forEach((el) => {
       if (!el) return;
@@ -41,7 +41,7 @@ const Services = ({ onReady }) => {
 
   return (
     <section id="services" className="min-h-screen bg-black ">
-      <AnimatedHeaderSection 
+      <AnimatedHeaderSection
         subTitle={"Behind the scene, Beyond the screen"}
         title={"Service"}
         text={""}
@@ -79,13 +79,13 @@ const Services = ({ onReady }) => {
                     </h3>
 
                     {/* Item description */}
-                    <p className="ml-9 text-sm text-white/50">
+                    <p className="ml-9 text-sm text-white/65">
                       {item.description}
                     </p>
 
                     {/* Divider except last */}
                     {itemIndex < service.items.length - 1 && (
-                      <div className="w-full h-px my-3 bg-white/20" />
+                      <div className="w-full h-px my-3 bg-white/30" />
                     )}
                   </div>
                 ))}

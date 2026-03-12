@@ -35,12 +35,12 @@ const AnimatedHeaderSection = ({subTitle,title,text,textColor, withScrollTrigger
         },[]);
   return (
     <div ref = {contextRef}>
-                <div style = {{clickPath:"polygon(0 0, 100% 0, 100% 100%, 0% 100%)"}}>
+                <div style = {{clipPath:"polygon(0 0, 100% 0, 100% 100%, 0% 100%)"}}>
                     <div ref = {headerRef} className='flex flex-col justify-center gap-12 pt-16 sm:gap-16'>
                         <p className={`text-sm font-light tracking-[0.5rem] uppercase px-10 ${textColor}`} >{subTitle}</p>
                         <div className='px-10'>
                             <h1
-                            className={`flex flex-col  flex-wrap gap-12 ${textColor} uppercase banner-text-responsive sm:gap-16 md:block`} 
+                            className={`flex flex-col flex-wrap gap-12 ${textColor} uppercase banner-text-responsive sm:gap-16 whitespace-nowrap`} 
                             >{title}</h1>  {/*Name in the Middle is Defined here*/}
                         </div>
                     </div>
